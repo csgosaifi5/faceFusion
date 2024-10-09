@@ -5,6 +5,11 @@ export const navLinks = [
     icon: "/assets/icons/home.svg",
   },
   {
+    label: "Face Fusion",
+    route: "/facefusion",
+    icon: "/assets/icons/image.svg",
+  },
+  {
     label: "Image Restore",
     route: "/transformations/add/restore",
     icon: "/assets/icons/image.svg",
@@ -132,7 +137,7 @@ export const transformationTypes = {
     title: "Background Remove",
     subTitle: "Removes the background of the image using AI",
     config: { removeBackground: true },
-    icon: "scan.svg",
+    icon: "camera.svg",
   },
   fill: {
     type: "fill",
@@ -157,7 +162,7 @@ export const transformationTypes = {
     config: {
       recolor: { prompt: "", to: "", multiple: true },
     },
-    icon: "camera.svg",
+    icon: "filter.svg",
   },
 };
 
