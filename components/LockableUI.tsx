@@ -5,8 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Lock, Unlock, Minus, Plus, Clock } from "lucide-react";
+import { formatTime } from "@/lib/utils";
+import { fetchLockStatus } from "@/lib/helpers/facefusion";
 
-const LockableUI = () => {
+const LockableUI = ({ user }: any) => {
+
   const [isLocked, setIsLocked] = useState(true);
   const [unlockDuration, setUnlockDuration] = useState(1);
   const [timeRemaining, setTimeRemaining] = useState(0);
@@ -14,16 +17,6 @@ const LockableUI = () => {
   const [appStatus, setAppStatus] = useState("");
   const [appLoading, setAppLoading] = useState(false);
   const [appUrl, setAppUrl] = useState("");
-
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (!isLocked && timeRemaining > 0) {
-      timer = setInterval(() => {
-        setTimeRemaining((prev) => Math.max(0, prev - 1));
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [isLocked, timeRemaining]);
 
   const handleUnlock = (duration: number) => {
     setIsLocked(false);
@@ -46,14 +39,22 @@ const LockableUI = () => {
     }, 5000);
   };
 
-  const formatTime = (seconds: number) => {
-    if (seconds === Infinity) return "Unlimited Access";
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = seconds % 60;
-    return `${hours}h ${minutes}m ${remainingSeconds}s`;
-  };
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (!isLocked && timeRemaining > 0) {
+      timer = setInterval(() => {
+        setTimeRemaining((prev) => Math.max(0, prev - 1));
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isLocked, timeRemaining]);
 
+  useEffect(() => {
+    fetchLockStatus(user, setIsLocked, setTimeRemaining);
+  }, [user]);
+
+  console.log(isLocked);
+  
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="bg-gray-900 shadow-md rounded-lg overflow-hidden">

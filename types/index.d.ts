@@ -11,10 +11,13 @@ declare type CreateUserParams = {
 };
 
 declare type UpdateUserParams = {
-  firstName: string;
-  lastName: string;
-  username: string;
-  photo: string;
+  firstName?: string;
+  lastName?: string;
+  username?: string;
+  photo?: string;
+  is_locked?: boolean;
+  unlock_time?: Date;
+  expiry_time?: Date;
 };
 
 // ====== IMAGE PARAMS
@@ -88,12 +91,7 @@ declare type CreateTransactionParams = {
   createdAt: Date;
 };
 
-declare type TransformationTypeKey =
-  | "restore"
-  | "fill"
-  | "remove"
-  | "recolor"
-  | "removeBackground";
+declare type TransformationTypeKey = "restore" | "fill" | "remove" | "recolor" | "removeBackground";
 
 // ====== URL QUERY PARAMS
 declare type FormUrlQueryParams = {
@@ -136,3 +134,7 @@ declare type TransformedImageProps = {
   hasDownload?: boolean;
   setIsTransforming?: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
+interface UserSession {
+  clerkId: string;
+}

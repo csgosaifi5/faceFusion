@@ -1,40 +1,57 @@
 import { Schema, model, models } from "mongoose";
 
-const UserSchema = new Schema({
-  clerkId: {
-    type: String,
-    required: true,
-    unique: true,
+const UserSchema = new Schema(
+  {
+    clerkId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    photo: {
+      type: String,
+      required: true,
+    },
+    firstName: {
+      type: String,
+    },
+    app_id: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+    },
+    creditBalance: {
+      type: Number,
+      default: 10,
+    },
+    is_locked: {
+      type: Boolean,
+      default: true,
+    },
+    unlock_time: {
+      type: Date,
+      required: false,
+    },
+    expiry_time: {
+      type: Date,
+      required: false,
+    },
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  photo: {
-    type: String,
-    required: true,
-  },
-  firstName: {
-    type: String,
-  },
-  lastName: {
-    type: String,
-  },
-  planId: {
-    type: Number,
-    default: 1,
-  },
-  creditBalance: {
-    type: Number,
-    default: 10,
-  },
-});
+  {
+    timestamps: true, // Automatically add createdAt and updatedAt fields
+  }
+);
 
 const User = models?.User || model("User", UserSchema);
 
