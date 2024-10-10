@@ -8,6 +8,9 @@ declare type CreateUserParams = {
   firstName: string;
   lastName: string;
   photo: string;
+  is_locked?: boolean;
+  unlock_time?: Date;
+  expiry_time?: Date;
 };
 
 declare type UpdateUserParams = {
