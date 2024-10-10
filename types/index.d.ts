@@ -7,7 +7,7 @@ declare type CreateUserParams = {
   username: string;
   firstName: string;
   lastName: string;
-  app_id: string;
+  app_id?: string;
   photo: string;
   is_locked?: boolean;
   unlock_time?: Date;

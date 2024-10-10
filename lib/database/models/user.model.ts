@@ -26,6 +26,7 @@ const UserSchema = new Schema(
     },
     app_id: {
       type: String,
+      required: false,
     },
     lastName: {
       type: String,
