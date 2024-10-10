@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Lock, Unlock, Minus, Plus, Clock } from "lucide-react";
 import { formatTime } from "@/lib/utils";
-import { fetchLockStatus } from "@/lib/helpers/facefusion";
+import { fetchLockStatus, handleUnlockApp } from "@/lib/helpers/facefusion";
 
 const LockableUI = ({ user }: any) => {
 
@@ -18,10 +18,8 @@ const LockableUI = ({ user }: any) => {
   const [appLoading, setAppLoading] = useState(false);
   const [appUrl, setAppUrl] = useState("");
 
-  const handleUnlock = (duration: number) => {
-    setIsLocked(false);
-    setTimeRemaining(duration * 3600);
-    startApp();
+  const handleUnlock = async(duration: number) => {
+   await handleUnlockApp(user,duration, setIsLocked, setTimeRemaining,startApp)
   };
 
   const addTime = () => {
@@ -49,11 +47,11 @@ const LockableUI = ({ user }: any) => {
     return () => clearInterval(timer);
   }, [isLocked, timeRemaining]);
 
-  useEffect(() => {
-    fetchLockStatus(user, setIsLocked, setTimeRemaining);
-  }, [user]);
+  // useEffect(() => {
+  //   fetchLockStatus(user, setIsLocked, setTimeRemaining);
+  // }, [user]);
 
-  console.log(isLocked);
+
   
   return (
     <div className="p-6 max-w-4xl mx-auto">
