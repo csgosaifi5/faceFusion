@@ -39,10 +39,10 @@ const UserSchema = new Schema(
       default: true,
     },
     unlock_time: {
-      type: String,
+      type: Date,
     },
     expiry_time: {
-      type: String,
+      type: Date,
     },
   },
   {
