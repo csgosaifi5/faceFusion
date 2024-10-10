@@ -10,7 +10,7 @@ import { handleError } from "../utils";
 export async function createUser(user: CreateUserParams) {
   try {
     await connectToDatabase();
-
+    
     const newUser = await User.create(user);
 
     return JSON.parse(JSON.stringify(newUser));
@@ -43,6 +43,7 @@ export async function updateUser(clerkId: string, user: UpdateUserParams) {
     const updatedUser = await User.findOneAndUpdate({ clerkId }, user, {
       new: true,
     });
+    console.log(user);
     console.log(updatedUser);
 
     if (!updatedUser) throw new Error("User update failed");

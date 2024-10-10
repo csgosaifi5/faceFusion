@@ -18,8 +18,8 @@ const LockableUI = ({ user }: any) => {
   const [appLoading, setAppLoading] = useState(false);
   const [appUrl, setAppUrl] = useState("");
 
-  const handleUnlock = async(duration: number) => {
-   await handleUnlockApp(user,duration, setIsLocked, setTimeRemaining,startApp)
+  const handleUnlock = (duration: number) => {
+   handleUnlockApp(user,duration, setIsLocked, setTimeRemaining,startApp)
   };
 
   const addTime = () => {

@@ -26,7 +26,6 @@ const UserSchema = new Schema(
     },
     app_id: {
       type: String,
-      required: false,
     },
     lastName: {
       type: String,
@@ -41,11 +40,9 @@ const UserSchema = new Schema(
     },
     unlock_time: {
       type: String,
-      required: false,
     },
     expiry_time: {
       type: String,
-      required: false,
     },
   },
   {
