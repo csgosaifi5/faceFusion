@@ -43,7 +43,7 @@ export async function updateUser(clerkId: string, user: UpdateUserParams) {
     const updatedUser = await User.findOneAndUpdate({ clerkId }, user, {
       new: true,
     });
-
+    console.log(updatedUser);
 
     if (!updatedUser) throw new Error("User update failed");
     

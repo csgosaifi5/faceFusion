@@ -43,10 +43,10 @@ export const PUT = async (request: Request) => {
     const { duration, user_id } = await request.json();
 
     const unlockTime = new Date().getTime();
-    const expiryTime = duration === Infinity ? undefined : new Date(unlockTime + duration * 10 * 1000);
+    const expiryTime = duration === Infinity ? undefined : new Date(unlockTime + duration * 10 * 1000).toISOString();;
     const updatedUser = await updateUser(user_id, {
       is_locked: false,
-      unlock_time: new Date(unlockTime),
+      unlock_time: new Date(unlockTime).toISOString(),
       expiry_time: expiryTime,
     });
       

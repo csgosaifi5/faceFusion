@@ -10,8 +10,8 @@ declare type CreateUserParams = {
   app_id?: string;
   photo: string;
   is_locked?: boolean;
-  unlock_time?: Date;
-  expiry_time?: Date;
+  unlock_time?: String;
+  expiry_time?: String;
 };
 
 declare type UpdateUserParams = {
@@ -20,8 +20,8 @@ declare type UpdateUserParams = {
   username?: string;
   photo?: string;
   is_locked?: boolean;
-  unlock_time?: Date;
-  expiry_time?: Date;
+  unlock_time?: String;
+  expiry_time?: String;
 };
 
 // ====== IMAGE PARAMS

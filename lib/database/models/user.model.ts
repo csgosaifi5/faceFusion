@@ -40,11 +40,11 @@ const UserSchema = new Schema(
       default: true,
     },
     unlock_time: {
-      type: Date,
+      type: String,
       required: false,
     },
     expiry_time: {
-      type: Date,
+      type: String,
       required: false,
     },
   },
