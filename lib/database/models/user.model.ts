@@ -24,9 +24,6 @@ const UserSchema = new Schema(
     firstName: {
       type: String,
     },
-    app_id: {
-      type: String,
-    },
     lastName: {
       type: String,
     },
@@ -34,15 +31,8 @@ const UserSchema = new Schema(
       type: Number,
       default: 10,
     },
-    is_locked: {
-      type: Boolean,
-      default: true,
-    },
-    unlock_time: {
-      type: Date,
-    },
-    expiry_time: {
-      type: Date,
+    faceFusion: {
+      type: Object,
     },
   },
   {

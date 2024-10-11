@@ -6,10 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Lock, Unlock, Minus, Plus, Clock } from "lucide-react";
 import { formatTime } from "@/lib/utils";
-import { fetchLockStatus, handleUnlockApp } from "@/lib/helpers/facefusion";
+import { fetchLockStatus, handleUnlockApp, handleAddTime } from "@/lib/helpers/facefusion";
 
 const LockableUI = ({ user }: any) => {
-
   const [isLocked, setIsLocked] = useState(true);
   const [unlockDuration, setUnlockDuration] = useState(1);
   const [timeRemaining, setTimeRemaining] = useState(0);
@@ -19,11 +18,11 @@ const LockableUI = ({ user }: any) => {
   const [appUrl, setAppUrl] = useState("");
 
   const handleUnlock = (duration: number) => {
-   handleUnlockApp(user,duration, setIsLocked, setTimeRemaining,startApp)
+    handleUnlockApp(user, duration, setIsLocked, setTimeRemaining, startApp);
   };
 
-  const addTime = () => {
-    setTimeRemaining((prev) => prev + additionalHours * 3600);
+  const addTime = (additionalduration: number) => {
+    handleAddTime(user, additionalduration, setIsLocked, setTimeRemaining, startApp);
   };
 
   const startApp = () => {
@@ -39,20 +38,30 @@ const LockableUI = ({ user }: any) => {
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
+
     if (!isLocked && timeRemaining > 0) {
       timer = setInterval(() => {
-        setTimeRemaining((prev) => Math.max(0, prev - 1));
+        setTimeRemaining((prev) => {
+          const newTimeRemaining = Math.max(0, prev - 1);
+
+          // Check if the timer has hit zero
+          if (newTimeRemaining === 0) {
+            // Call the function when the timer hits zero
+            fetchLockStatus(user, setIsLocked, setTimeRemaining);
+          }
+
+          return newTimeRemaining; // Return the updated time remaining
+        });
       }, 1000);
     }
+
     return () => clearInterval(timer);
   }, [isLocked, timeRemaining]);
 
-  // useEffect(() => {
-  //   fetchLockStatus(user, setIsLocked, setTimeRemaining);
-  // }, [user]);
+  useEffect(() => {
+    fetchLockStatus(user, setIsLocked, setTimeRemaining);
+  }, []);
 
-
-  
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="bg-gray-900 shadow-md rounded-lg overflow-hidden">
@@ -151,7 +160,10 @@ const LockableUI = ({ user }: any) => {
                   >
                     <Plus className="h-6 w-6" />
                   </Button>
-                  <Button onClick={addTime} className="h-12 flex-grow text-lg bg-white text-gray-900 hover:bg-gray-200">
+                  <Button
+                    onClick={() => addTime(additionalHours)}
+                    className="h-12 flex-grow text-lg bg-white text-gray-900 hover:bg-gray-200"
+                  >
                     Add {additionalHours} hour{additionalHours > 1 ? "s" : ""}
                   </Button>
                 </div>

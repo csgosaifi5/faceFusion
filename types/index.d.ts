@@ -7,11 +7,8 @@ declare type CreateUserParams = {
   username: string;
   firstName: string;
   lastName: string;
-  app_id?: string;
   photo: string;
-  is_locked?: boolean;
-  unlock_time?: Date;
-  expiry_time?: Date;
+  facefusion?:object;
 };
 
 declare type UpdateUserParams = {
@@ -19,10 +16,7 @@ declare type UpdateUserParams = {
   lastName?: string;
   username?: string;
   photo?: string;
-  is_locked?: boolean;
-  app_id?: string;
-  unlock_time?: Date;
-  expiry_time?: Date;
+  facefusion?:object;
 };
 
 // ====== IMAGE PARAMS
