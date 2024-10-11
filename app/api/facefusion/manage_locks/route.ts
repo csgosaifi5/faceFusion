@@ -67,6 +67,8 @@ export const PUT = async (request: Request) => {
       },
     });
 
+    
+
     if (!updatedUser) {
       return new NextResponse(JSON.stringify({ error: "Failed to unlock" }), {
         status: 500,

@@ -11,7 +11,7 @@ export async function createUser(user: CreateUserParams) {
   try {
     await connectToDatabase();
     
-    const newUser = await User.create(user);
+    const newUser = await User.create({...user, facefusion:{is_locked:true}});
 
     return JSON.parse(JSON.stringify(newUser));
   } catch (error) {
@@ -39,6 +39,7 @@ export async function updateUser(clerkId: string, user: UpdateUserParams) {
   try {
     
     await connectToDatabase();
+    console.log(user);
     
     const updatedUser = await User.findOneAndUpdate({ clerkId }, user, {
       new: true,
