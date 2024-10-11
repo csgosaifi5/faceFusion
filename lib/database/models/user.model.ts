@@ -31,7 +31,7 @@ const UserSchema = new Schema(
       type: Number,
       default: 10,
     },
-    faceFusion: {
+    facefusion: {
       type: Object,
     },
   },
