@@ -10,8 +10,10 @@ import { handleError } from "../utils";
 export async function createUser(user: CreateUserParams) {
   try {
     await connectToDatabase();
+    const userData= {...user, facefusion:{is_locked:true}}
+    console.log(userData);
     
-    const newUser = await User.create({...user, facefusion:{is_locked:true}});
+    const newUser = await User.create(userData);
 
     return JSON.parse(JSON.stringify(newUser));
   } catch (error) {
@@ -39,7 +41,6 @@ export async function updateUser(clerkId: string, user: UpdateUserParams) {
   try {
     
     await connectToDatabase();
-    console.log(user);
     
     const updatedUser = await User.findOneAndUpdate({ clerkId }, user, {
       new: true,
