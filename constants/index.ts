@@ -10,6 +10,11 @@ export const navLinks = [
     icon: "/assets/icons/image.svg",
   },
   {
+    label: "Magic Subs",
+    route: "/magicsubs",
+    icon: "/assets/icons/filter.svg",
+  },
+  {
     label: "Image Restore",
     route: "/transformations/add/restore",
     icon: "/assets/icons/image.svg",
@@ -49,13 +54,13 @@ export const navLinks = [
 export const plans = [
   {
     _id: 1,
-    name: "Free",
+    name: "Basic Package",
     icon: "/assets/icons/free-plan.svg",
-    price: 0,
-    credits: 20,
+    price: 100,
+    tokens: 100,
     inclusions: [
       {
-        label: "20 Free Credits",
+        label: "100 Tokens",
         isIncluded: true,
       },
       {
@@ -76,11 +81,11 @@ export const plans = [
     _id: 2,
     name: "Pro Package",
     icon: "/assets/icons/free-plan.svg",
-    price: 40,
-    credits: 120,
+    price: 300,
+    tokens: 300,
     inclusions: [
       {
-        label: "120 Credits",
+        label: "300 Tokens",
         isIncluded: true,
       },
       {
@@ -101,11 +106,11 @@ export const plans = [
     _id: 3,
     name: "Premium Package",
     icon: "/assets/icons/free-plan.svg",
-    price: 199,
-    credits: 2000,
+    price: 500,
+    tokens: 500,
     inclusions: [
       {
-        label: "2000 Credits",
+        label: "500 Tokens",
         isIncluded: true,
       },
       {

@@ -11,7 +11,6 @@ export async function createUser(user: CreateUserParams) {
   try {
     await connectToDatabase();
     const userData= {...user, facefusion:{is_locked:true}}
-    console.log(userData);
     
     const newUser = await User.create(userData);
 
@@ -77,7 +76,7 @@ export async function deleteUser(clerkId: string) {
 }
 
 // USE CREDITS
-export async function updateCredits(userId: string, creditFee: number) {
+export async function updateTokens(userId: string, creditFee: number) {
   try {
     await connectToDatabase();
 

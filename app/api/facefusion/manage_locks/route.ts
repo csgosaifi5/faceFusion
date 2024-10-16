@@ -3,9 +3,9 @@ import { NextResponse } from "next/server";
 
 export const POST = async (request: Request) => {
   try {
-    const { app_id, user_id } = await request.json();
+    const { user_id } = await request.json();
 
-    const { user } = await getUserById(user_id);
+    const user  = await getUserById(user_id);
     if (!user) {
       return new NextResponse(
         JSON.stringify({ data: { facefusion: { is_locked: true } }, message: "User not found" }),
@@ -21,8 +21,6 @@ export const POST = async (request: Request) => {
       const updatedUser = await updateUser(user_id, {
         facefusion: {
           is_locked: true,
-          expiry_time: user.facefusion.expiry_time,
-          unlock_time: user.facefusion.unlock_time,
         },
       });
 
@@ -66,8 +64,6 @@ export const PUT = async (request: Request) => {
         expiry_time: expiryTime,
       },
     });
-
-    
 
     if (!updatedUser) {
       return new NextResponse(JSON.stringify({ error: "Failed to unlock" }), {

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Lock, Unlock, Minus, Plus, Clock } from "lucide-react";
 import { formatTime } from "@/lib/utils";
-import { fetchLockStatus, handleUnlockApp, handleAddTime } from "@/lib/helpers/facefusion";
+import { fetchLockStatus, handleUnlockApp, handleAddTime,handleAppSteps } from "@/lib/helpers/facefusion";
 
 const LockableUI = ({ user }: any) => {
   const [isLocked, setIsLocked] = useState(true);
@@ -28,12 +28,16 @@ const LockableUI = ({ user }: any) => {
   const startApp = () => {
     setAppLoading(true);
     setAppStatus("Starting app...");
-    // Simulating app start
-    setTimeout(() => {
-      setAppLoading(false);
-      setAppStatus("App started");
-      setAppUrl("https://example.com/premium-content");
-    }, 5000);
+
+    //We have to apply all steps api here
+    handleAppSteps(user, setAppLoading, setAppStatus, setAppUrl);
+
+    // // Simulating app start
+    // setTimeout(() => {
+    //   setAppLoading(false);
+    //   setAppStatus("App started");
+    //   setAppUrl("https://example.com/premium-content");
+    // }, 5000);
   };
 
   useEffect(() => {
@@ -57,6 +61,25 @@ const LockableUI = ({ user }: any) => {
 
     return () => clearInterval(timer);
   }, [isLocked, timeRemaining]);
+
+ 
+
+  useEffect(() => {
+    if (!isLocked) return;
+  
+    function beforeUnload(e: BeforeUnloadEvent) {
+      e.preventDefault();
+    }
+  
+    window.addEventListener('beforeunload', beforeUnload);
+  
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnload);
+    };
+  }, [isLocked]);
+  
+  
+  
 
   useEffect(() => {
     fetchLockStatus(user, setIsLocked, setTimeRemaining);

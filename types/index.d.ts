@@ -8,17 +8,49 @@ declare type CreateUserParams = {
   firstName: string;
   lastName: string;
   photo: string;
-  facefusion?:object;
+  facefusion?: {
+    is_locked?: boolean;
+    unlock_time?: Date;
+    expiry_time?: Date;
+    contractId?: string;
+  };
+};
+declare type createProjectParams = {
+  user_id: string;
+  title: string;
+  description: string;
 };
 
+declare type UpdateMsProjectParams = {
+  title?: string;
+  description?: string;
+  objectKey?: string | null;
+  downloadUrl?: string | null;
+  transcription?: string | null;
+};
 declare type UpdateUserParams = {
   firstName?: string;
   lastName?: string;
   username?: string;
   photo?: string;
-  facefusion?:object;
+  facefusion?: {
+    is_locked?: boolean;
+    unlock_time?: Date;
+    expiry_time?: Date;
+    contractId?: string;
+  };
 };
-
+declare type Project = {
+  _id: string;
+  user_id: string;
+  title: string;
+  description: string;
+  objectKey: string | null;
+  downloadUrl: string | null;
+  transcription: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
 // ====== IMAGE PARAMS
 declare type AddImageParams = {
   image: {
@@ -81,13 +113,11 @@ declare type CheckoutTransactionParams = {
   buyerId: string;
 };
 
-declare type CreateTransactionParams = {
-  stripeId: string;
+declare type CreateOrderParams = {
   amount: number;
-  credits: number;
+  tokens: number;
   plan: string;
-  buyerId: string;
-  createdAt: Date;
+  userId: string;
 };
 
 declare type TransformationTypeKey = "restore" | "fill" | "remove" | "recolor" | "removeBackground";

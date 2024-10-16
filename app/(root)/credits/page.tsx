@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { plans } from "@/constants";
 import { getUserById } from "@/lib/actions/user.actions";
 import Checkout from "@/components/shared/Checkout";
+import Script from "next/script";
 
 const Credits = async () => {
   const { userId } = auth();
@@ -18,10 +19,13 @@ const Credits = async () => {
   return (
     <>
       <Header
-        title="Buy Credits"
+        title="Buy Tokens"
         subtitle="Choose a credit package that suits your needs!"
       />
-
+    <Script
+        type="text/javascript"
+        src="https://checkout.razorpay.com/v1/checkout.js"
+      />
       <section>
         <ul className="credits-list">
           {plans.map((plan) => (
@@ -31,8 +35,8 @@ const Credits = async () => {
                 <p className="p-20-semibold mt-2 text-purple-500">
                   {plan.name}
                 </p>
-                <p className="h1-semibold text-dark-600">${plan.price}</p>
-                <p className="p-16-regular">{plan.credits} Credits</p>
+                <p className="h1-semibold text-dark-600">&#x20b9;{plan.price}</p>
+                <p className="p-16-regular">{plan.tokens} Tokens</p>
               </div>
 
               {/* Inclusions */}
@@ -64,8 +68,8 @@ const Credits = async () => {
                   <Checkout
                     plan={plan.name}
                     amount={plan.price}
-                    credits={plan.credits}
-                    buyerId={user._id}
+                    tokens={plan.tokens}
+                    userId={user._id}
                   />
                 </SignedIn>
               )}

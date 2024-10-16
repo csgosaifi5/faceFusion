@@ -5,7 +5,7 @@ const TransactionSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  stripeId: {
+  razorpayOrderId: {
     type: String,
     required: true,
     unique: true,
@@ -17,10 +17,14 @@ const TransactionSchema = new Schema({
   plan: {
     type: String,
   },
-  credits: {
+  status: {
+    type: String,
+    default:"Failed"
+  },
+  tokens: {
     type: Number,
   },
-  buyer: {
+  user_id: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },
