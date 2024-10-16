@@ -11,7 +11,12 @@ import { updateTokens} from "../actions/user.actions";
     });
     const data = await res.json();
     console.log(data);
-      await createTransaction(transaction,data.id)
+
+     const newTransaction= await createTransaction(transaction,data.id)
+
+     console.log(newTransaction);
+     
+
     const paymentData = {
       key: process.env.NEXT_PUBLIC_RAZORPAY_APIKEY,
       order_id: data.id,

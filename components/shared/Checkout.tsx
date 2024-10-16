@@ -18,13 +18,26 @@ const Checkout = ({
   tokens: number;
   userId: string;
 }) => {
-  const { toast } = useToast();
 
-  // useEffect(() => {
-  //   const script = document.createElement('script');
-	// 	script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-	// 	document.body.appendChild(script);
-  // }, []);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.async = true;
+      document.body.appendChild(script);
+  
+      script.onload = () => {
+        console.log("Razorpay script loaded");
+      };
+  
+      script.onerror = () => {
+        console.error("Failed to load Razorpay SDK");
+      };
+  
+     
+    }
+  }, []);
+  
 
   // useEffect(() => {
   //   // Check to see if this is a redirect back from Checkout

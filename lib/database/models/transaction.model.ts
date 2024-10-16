@@ -1,10 +1,8 @@
 import { Schema, model, models } from "mongoose";
 
 const TransactionSchema = new Schema({
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+  user_id: { type: Schema.Types.ObjectId, ref: "User" },
+
   razorpayOrderId: {
     type: String,
     required: true,
@@ -19,14 +17,14 @@ const TransactionSchema = new Schema({
   },
   status: {
     type: String,
-    default:"Failed"
+    default: "Failed",
   },
   tokens: {
     type: Number,
   },
-  user_id: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 

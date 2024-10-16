@@ -22,10 +22,6 @@ const Credits = async () => {
         title="Buy Tokens"
         subtitle="Choose a credit package that suits your needs!"
       />
-    <Script
-        type="text/javascript"
-        src="https://checkout.razorpay.com/v1/checkout.js"
-      />
       <section>
         <ul className="credits-list">
           {plans.map((plan) => (
