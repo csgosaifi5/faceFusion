@@ -25,7 +25,7 @@ export default function VideoPlayer({
 
   return (
     <Player
-      ref={playerRef}
+      // ref={playerRef}
       component={CaptionedVideo}
       inputProps={{
         src,

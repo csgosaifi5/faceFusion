@@ -10,8 +10,8 @@ import { updateTokens} from "../actions/user.actions";
       body: JSON.stringify({ amount: transaction.amount * 100 }),
     });
     const data = await res.json();
+    console.log(data);
       await createTransaction(transaction,data.id)
-      console.log(data);
     const paymentData = {
       key: process.env.NEXT_PUBLIC_RAZORPAY_APIKEY,
       order_id: data.id,
