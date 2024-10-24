@@ -1,7 +1,7 @@
 "use client";
 
 import { Player, PlayerRef } from "@remotion/player";
-import { LegacyRef, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { CaptionedVideo } from "./captioned-video";
 
 // Component that renders the video player with or without subtitles
@@ -13,7 +13,7 @@ export default function VideoPlayer({
   controls,
 }: {
   src: string;
-  playerRef: LegacyRef<PlayerRef>;
+  playerRef: React.RefObject<PlayerRef>;
   controls: boolean;
 }) {
   const [durationInFrames, setDurationInFrames] = useState<number>(350);
@@ -25,7 +25,7 @@ export default function VideoPlayer({
 
   return (
     <Player
-      // ref={playerRef}
+      ref={playerRef}
       component={CaptionedVideo}
       inputProps={{
         src,

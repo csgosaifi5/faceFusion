@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Lock, Unlock, Minus, Plus, Clock } from "lucide-react";
 import { formatTime } from "@/lib/utils";
-import { fetchLockStatus, handleUnlockApp, handleAddTime,handleAppSteps } from "@/lib/helpers/facefusion";
+import { fetchLockStatus, handleUnlockApp, handleAddTime,handleAppSteps, destroyVastInstance } from "@/lib/helpers/facefusion";
 
 const LockableUI = ({ user }: any) => {
   const [isLocked, setIsLocked] = useState(true);
@@ -50,6 +50,7 @@ const LockableUI = ({ user }: any) => {
 
           // Check if the timer has hit zero
           if (newTimeRemaining === 0) {
+            destroyVastInstance(user)
             // Call the function when the timer hits zero
             fetchLockStatus(user, setIsLocked, setTimeRemaining);
           }
@@ -134,6 +135,7 @@ const LockableUI = ({ user }: any) => {
                     <Plus className="h-6 w-6" />
                   </Button>
                   <Button
+                  disabled={appLoading}
                     onClick={() => handleUnlock(unlockDuration)}
                     className="h-16 flex-grow text-lg bg-white text-gray-900 hover:bg-gray-200"
                   >
@@ -156,7 +158,7 @@ const LockableUI = ({ user }: any) => {
               <div className="bg-gray-800 p-4 rounded-lg text-white">
                 <h2>{appStatus}</h2>
                 {appLoading ? (
-                  <p>Loading App. Please wait for up to 5 minutes.</p>
+                  <p>Loading App. Please wait for up to 7-8 minutes.</p>
                 ) : (
                   <p>Unlocked Premium Content URL: {appUrl}</p>
                 )}
@@ -184,6 +186,7 @@ const LockableUI = ({ user }: any) => {
                     <Plus className="h-6 w-6" />
                   </Button>
                   <Button
+                    disabled={appLoading}
                     onClick={() => addTime(additionalHours)}
                     className="h-12 flex-grow text-lg bg-white text-gray-900 hover:bg-gray-200"
                   >

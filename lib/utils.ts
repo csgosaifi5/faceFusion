@@ -26,7 +26,7 @@ export default {
     }
 
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_API_URL + url, requestOptions);
+      const response = await fetch(url, requestOptions);
       let body = await response.text();
       if (response.status != 200) {
         throw body;
@@ -170,4 +170,14 @@ export const deepMergeObjects = (obj1: any, obj2: any) => {
   }
 
   return output;
+};
+export const getDate = (date: any) => {
+  var d = new Date(date);
+  var year = d.getFullYear();
+  var month = String(d.getMonth() + 1).padStart(2, '0');
+  var day = String(d.getDate()).padStart(2, '0');
+  var hours = String(d.getHours()).padStart(2, '0');
+  var minutes = String(d.getMinutes()).padStart(2, '0');
+
+  return `${year}-${month}-${day} at ${hours}:${minutes}`;
 };

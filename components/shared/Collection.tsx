@@ -4,28 +4,24 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { CldImage } from "next-cloudinary";
-
-import {
-  Pagination,
-  PaginationContent,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Pagination, PaginationContent, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { transformationTypes } from "@/constants";
 import { IImage } from "@/lib/database/models/image.model";
-import { formUrlQuery } from "@/lib/utils";
+import { formUrlQuery, getDate } from "@/lib/utils";
 
 import { Button } from "../ui/button";
 
 import { Search } from "./Search";
 
 export const Collection = ({
-  hasSearch = false,
-  images,
-  totalPages = 1,
+  transactions,
+  totalPages=1 ,
   page,
+  hasSearch = false,
 }: {
-  images: IImage[];
+  transactions: ITRANSACTIONS[];
   totalPages?: number;
   page: number;
   hasSearch?: boolean;
@@ -48,31 +44,58 @@ export const Collection = ({
 
   return (
     <>
-      <div className="collection-heading">
-        <h2 className="h2-bold text-dark-600">Recent Edits</h2>
-        {hasSearch && <Search />}
-      </div>
-
-      {images.length > 0 ? (
-        <ul className="collection-list">
-          {images.map((image) => (
-            <Card image={image} key={image._id} />
-          ))}
-        </ul>
-      ) : (
-        <div className="collection-empty">
-          <p className="p-20-semibold">Empty List</p>
-        </div>
-      )}
+      <Tabs defaultValue="account">
+        <TabsList>
+          <TabsTrigger value="account">Transactions</TabsTrigger>
+          <TabsTrigger value="password">Tokens</TabsTrigger>
+        </TabsList>
+        <TabsContent value="account">
+          <Table>
+            <TableCaption>A list of your recent Transactions.</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">OrderId</TableHead>
+                <TableHead>Plan</TableHead>
+                <TableHead>Amount</TableHead>
+                <TableHead>Tokens</TableHead>
+                <TableHead className="text-right">Status</TableHead>
+                <TableHead className="text-center">Date</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {transactions.length > 0 ? (
+                <>
+                  {transactions.map((transaction,index) => (
+                    <TableRow key={index}>
+                      <TableCell className="font-medium">{transaction.razorpayOrderId}</TableCell>
+                      <TableCell>{transaction.plan}</TableCell>
+                      <TableCell>${transaction.amount}</TableCell>
+                      <TableCell>{transaction.tokens}</TableCell>
+                      <TableCell className="text-right">{transaction.status}</TableCell>
+                      <TableCell className="text-right">{getDate(transaction.createdAt)}</TableCell>
+                      
+                    </TableRow>
+                  ))}
+                </>
+              ) : (
+                <div className="collection-empty">
+                  <p className="p-20-semibold">Empty List</p>
+                </div>
+              )}
+            </TableBody>
+          </Table>
+        </TabsContent>
+        <TabsContent value="password">
+          <div className="collection-empty">
+            <p className="p-20-semibold">Empty List</p>
+          </div>
+        </TabsContent>
+      </Tabs>
 
       {totalPages > 1 && (
         <Pagination className="mt-10">
           <PaginationContent className="flex w-full">
-            <Button
-              disabled={Number(page) <= 1}
-              className="collection-btn"
-              onClick={() => onPageChange("prev")}
-            >
+            <Button disabled={Number(page) <= 1} className="collection-btn" onClick={() => onPageChange("prev")}>
               <PaginationPrevious className="hover:bg-transparent hover:text-white" />
             </Button>
 
@@ -94,36 +117,4 @@ export const Collection = ({
   );
 };
 
-const Card = ({ image }: { image: IImage }) => {
-  return (
-    <li>
-      <Link href={`/transformations/${image._id}`} className="collection-card">
-        <CldImage
-          src={image.publicId}
-          alt={image.title}
-          width={image.width}
-          height={image.height}
-          {...image.config}
-          loading="lazy"
-          className="h-52 w-full rounded-[10px] object-cover"
-          sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw"
-        />
-        <div className="flex-between">
-          <p className="p-20-semibold mr-3 line-clamp-1 text-dark-600">
-            {image.title}
-          </p>
-          <Image
-            src={`/assets/icons/${
-              transformationTypes[
-                image.transformationType as TransformationTypeKey
-              ].icon
-            }`}
-            alt={image.title}
-            width={24}
-            height={24}
-          />
-        </div>
-      </Link>
-    </li>
-  );
-};
+

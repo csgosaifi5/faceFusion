@@ -7,22 +7,20 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "../ui/button";
 
-const Sidebar = () => {
+const Sidebar = ({ adminBlogList }: any) => {
   const pathname = usePathname();
 
   return (
     <aside className="sidebar">
       <div className="flex size-full flex-col gap-4">
-        <Link href="/" className="sidebar-logo">
-          <Image src="/assets/images/lossgo-text.svg" alt="FusionEdge" width={180} height={28} />
-        </Link>
-
         <nav className="sidebar-nav">
           <SignedIn>
             <ul className="sidebar-nav_elements">
               {navLinks.slice(0, 8).map((link) => {
                 const isActive = link.route === pathname;
-
+                if (!adminBlogList && link.label === "Blogs List") {
+                  return null;
+                }
                 return (
                   <li
                     key={link.route}
@@ -49,6 +47,10 @@ const Sidebar = () => {
               {navLinks.slice(8).map((link) => {
                 const isActive = link.route === pathname;
 
+                if (!adminBlogList && link.label === "Blogs List") {
+                  return null;
+                }
+
                 return (
                   <li
                     key={link.route}
@@ -69,18 +71,8 @@ const Sidebar = () => {
                   </li>
                 );
               })}
-
-              <li className="flex-center cursor-pointer gap-2 p-4">
-                <UserButton afterSignOutUrl="/" showName />
-              </li>
             </ul>
           </SignedIn>
-
-          <SignedOut>
-            <Button asChild className="button bg-purple-gradient bg-cover">
-              <Link href="/sign-in">Login</Link>
-            </Button>
-          </SignedOut>
         </nav>
       </div>
     </aside>

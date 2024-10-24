@@ -111,9 +111,7 @@ export async function handleAppSteps(
   let contract_id: string | undefined;
 
   const waitForContractId: Promise<void> = new Promise((resolve) => {
-    const intervalId = setInterval(async () => {
-      attempts++;
-
+    const tryFetch = async (attempts: number) => {
       const { error, contractId } = await (
         await fetch("/api/facefusion/steps_1to5", {
           method: "POST",
@@ -121,39 +119,70 @@ export async function handleAppSteps(
           body: JSON.stringify({ user_id: user.clerkId }),
         })
       ).json();
-
+  
       if (!error || attempts >= 3) {
-        clearInterval(intervalId);
+        // Stop retrying after a successful response or 3 failed attempts
         if (!error) {
-          contract_id = contractId;
+          contract_id = contractId; // Set contract_id if successful
         }
-        resolve(); // Resolve promise after either success or 3 failed attempts
+        resolve(); // Resolve the promise
       } else {
         console.log(`Attempt ${attempts} failed, retrying...`);
+        // Retry after 2 minutes
+        setTimeout(() => tryFetch(attempts + 1), 2 * 60 * 1000);
       }
-    }, 15000);
+    };
+  
+    // Start the first attempt
+    tryFetch(1);
   });
-
+  
+  // Await the promise
   await waitForContractId;
+  
 
   if (contract_id === undefined) {
     return { message: "No contract ID (failed after 3 attempts)" };
   }
-  await wait(20000);
+
+  console.log(contract_id);
+
+  const VastResponse = await fetch("/api/facefusion/vast_instance", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      user_id: user.clerkId,
+      contract_id: contract_id,
+    }),
+  });
+  const { data, message } = await VastResponse.json();
+
+  console.log(message);
+
+  await wait(60000);
   const step2Response = await fetch("/api/facefusion/steps_1to5", {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ user_id: user.clerkId, contract_id: contract_id }),
   });
 
-  const { error, data, message } = await step2Response.json();
+  const { error } = await step2Response.json();
 
   if (error) {
-    console.log(error);
-    return;
-  }
-  if (!data.started) {
+    await wait(60000);
     console.log("App has not started yet");
+    const step2Response2ndTry = await fetch("/api/facefusion/steps_1to5", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id: user.clerkId, contract_id: contract_id }),
+    });
+    const { error } = await step2Response2ndTry.json();
+    if (error) {
+      console.log(error);
+      return;
+    }
     // We have to start app before moving forward to step3_4_5Response api
   }
 
@@ -165,7 +194,7 @@ export async function handleAppSteps(
 
   const step3_4_5Data = await step3_4_5Response.json();
 
-  const step6Response = await fetch("/api/facefusion/steps_6and7", {
+  const step6Response = await fetch("/api/facefusion/step_6and7", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -175,27 +204,76 @@ export async function handleAppSteps(
     }),
   });
 
-  const step7Response = await fetch("/api/facefusion/steps_6and7", {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
+  const step6Data = await step6Response.json();
+
+  console.log(step6Data);
+
+  await wait(4 * 60 * 1000);
+
+  const fetchStep7Logs = async () => {
+    try {
+      let publicUrl = null;
+
+      while (!publicUrl) {
+        const step7Response = await fetch("/api/facefusion/step_6and7", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: user.clerkId,
+            managerId: step3_4_5Data.managerId,
+            sessionId: step3_4_5Data.sessionId,
+          }),
+        });
+
+        const step7Data = await step7Response.json();
+
+        if (step7Data.data && step7Data.message === "Logs fetched") {
+          const urlPattern = /public URL:\s*(https?:\/\/[^\s]+)/g;
+          const matches = step7Data.data.logs.match(urlPattern);
+
+          if (matches) {
+            // Extract the URL part from the match
+            publicUrl = matches[0].replace("public URL: ", "");
+            console.log(publicUrl); // Logs the extracted public URL
+          }
+
+          if (publicUrl) {
+            console.log("URLs found:", publicUrl);
+            setAppUrl(publicUrl);
+            setAppStatus("App Started");
+            setAppLoading(false);
+            break; // Exit loop if URLs are found
+          } else {
+            console.log("No URLs found. Retrying in 1 minute...");
+          }
+        }
+
+        // Wait for 1 minute before making the next request
+        await wait(60 * 1000);
+      }
+    } catch (error) {
+      console.error("Error fetching logs:", error);
+      setAppStatus("Error fetching app URL");
+      setAppLoading(false);
+    }
+  };
+
+  // Call the function to start fetching logs
+  fetchStep7Logs();
+}
+
+export async function destroyVastInstance(user: UserSession) {
+  const destroyApi = await fetch("/api/facefusion/vast_instance", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({
       user_id: user.clerkId,
-      managerId: step3_4_5Data.managerId,
-      sessionId: step3_4_5Data.sessionId,
     }),
   });
-
-
-  const step7Data = await step7Response.json();
-  
-  if (step7Data.data && message === "Logs fetched") {
-    setAppStatus("App Started");
-
-    // We have to find app url from step7Data.data using regex
-    const AppUrl: string = step7Data.data.regex;
-    setAppUrl(AppUrl);
-    setAppLoading(false);
-  }
+  const { data, message } = await destroyApi.json();
+  console.log(message);
 }
 
 // Helper function to wait for a specified time (in milliseconds)

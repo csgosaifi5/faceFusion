@@ -38,16 +38,18 @@ export const POST = async (request: Request) => {
     let contractId: string | null = null;
     let tries = 0;
     let index = 1;
-    let contract_created = false;
     let maxTotalTries = 10; // Set a limit for total attempts to prevent an infinite loop
 
-    while (!contract_created && maxTotalTries > 0) {
+    while (!contractId && maxTotalTries > 0) {
       await wait(5000);
       tries++;
       maxTotalTries--; // Decrease max total tries
 
       if (tries > 3) {
         tries = 0;
+      }
+      if (tries === 2) {
+        index++;
       }
 
       const startVastResponse = await fetch(`${API_BASE_URL}/vast/start`, {
@@ -63,39 +65,16 @@ export const POST = async (request: Request) => {
       });
 
       if (startVastResponse.ok) {
-        contract_created = true;
-        if (tries === 2) {
-          index++;
-        }
-        if (index > 3) {
-          throw new Error(`Failed to create instance`);
-        }
+        const startVastData = await startVastResponse.json();
+        contractId = startVastData.contract;
       } else {
         console.log("API call failed, retrying...");
       }
-
-      const startVastData = await startVastResponse.json();
-      contractId = startVastData.contract;
-    }
-
-    if (!contract_created) {
-      throw new Error("Failed to create contract after multiple attempts.");
     }
 
     // Adjust according to actual response
     if (contractId === null) {
       return new NextResponse(JSON.stringify({ error: "Something went wrong" }), { status: 500 });
-    }
-    const updatedUser = await updateUser(user_id, {
-      facefusion: {
-        ...user.facefusion,
-        contractId: contractId,
-      },
-    });
-    if (!updatedUser) {
-      return new NextResponse(JSON.stringify({ error: "Something Went Wrong With User Update" }), {
-        status: 500,
-      });
     }
 
     return new NextResponse(JSON.stringify({ contractId: contractId }), { status: 200 });
@@ -164,7 +143,7 @@ export const PATCH = async (request: Request) => {
 
     const sshDetailsData = await sshDetailsResponse.json();
     //We are not gettigg all 4 values only port and public_id in ssh-details api
-    const { public_id, port, username, ssh_key_path } = sshDetailsData; // Adjust according to actual response
+    const { public_ip, port } = sshDetailsData; // Adjust according to actual response
 
     //We are here and need to adjust body to create manager
 
@@ -176,7 +155,7 @@ export const PATCH = async (request: Request) => {
         Authorization: encodeCredentials(AUTH_USERNAME, AUTH_PASSWORD),
       },
       body: JSON.stringify({
-        host: public_id,
+        host: `${public_ip}`, // Template literal to convert public_ip to a string
         port: port,
         username: username,
         ssh_key_path: sshkeypath, // Provide the path to your SSH key

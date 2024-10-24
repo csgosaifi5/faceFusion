@@ -3,6 +3,7 @@ import TransformationForm from '@/components/shared/TransformationForm';
 import { transformationTypes } from '@/constants'
 import { getUserById } from '@/lib/actions/user.actions';
 import { auth } from '@clerk/nextjs';
+import { Heading } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
 const AddTransformationTypePage = async ({ params: { type } }: SearchParamProps) => {
@@ -19,6 +20,8 @@ const AddTransformationTypePage = async ({ params: { type } }: SearchParamProps)
         title={transformation.title}
         subtitle={transformation.subTitle}
       />
+
+      <h1 className='text-center mt-10'>Coming Soon....</h1>
     
       {/* <section className="mt-10">
         <TransformationForm 

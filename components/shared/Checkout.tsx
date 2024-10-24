@@ -1,9 +1,8 @@
 "use client";
 
-import { loadStripe } from "@stripe/stripe-js";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createOrder } from "@/lib/helpers/transaction";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 import { Button } from "../ui/button";
 
@@ -18,6 +17,7 @@ const Checkout = ({
   tokens: number;
   userId: string;
 }) => {
+  const [paymentStatus, setPaymentStatus] = useState("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -25,41 +25,25 @@ const Checkout = ({
       script.src = "https://checkout.razorpay.com/v1/checkout.js";
       script.async = true;
       document.body.appendChild(script);
-  
+
       script.onload = () => {
         console.log("Razorpay script loaded");
       };
-  
+
       script.onerror = () => {
         console.error("Failed to load Razorpay SDK");
       };
-  
-     
     }
   }, []);
-  
 
-  // useEffect(() => {
-  //   // Check to see if this is a redirect back from Checkout
-  //   const query = new URLSearchParams(window.location.search);
-  //   if (query.get("success")) {
-  //     toast({
-  //       title: "Order placed!",
-  //       description: "You will receive an email confirmation",
-  //       duration: 5000,
-  //       className: "success-toast",
-  //     });
-  //   }
-
-  //   if (query.get("canceled")) {
-  //     toast({
-  //       title: "Order canceled!",
-  //       description: "Continue to shop around and checkout when you're ready",
-  //       duration: 5000,
-  //       className: "error-toast",
-  //     });
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (paymentStatus === "Token Added Successfully") {
+      toast.success(paymentStatus);
+      setTimeout(() => {
+        setPaymentStatus("");
+      }, 3000);
+    }
+  }, [paymentStatus]);
 
   const onCheckout = async () => {
     const transaction = {
@@ -69,17 +53,19 @@ const Checkout = ({
       userId,
     };
 
-    await createOrder(transaction);
+    const response = await createOrder(transaction, setPaymentStatus);
+    if (paymentStatus === "Token Added Successfully") {
+      toast.success(paymentStatus);
+      setTimeout(() => {
+        setPaymentStatus("");
+      }, 3000);
+    }
   };
 
   return (
     <div onClick={onCheckout}>
       <section>
-        <Button
-          type="submit"
-          role="link"
-          className="w-full rounded-full bg-purple-gradient bg-cover"
-        >
+        <Button type="submit" role="link" className="w-full rounded-full bg-purple-gradient bg-cover">
           Buy Tokens
         </Button>
       </section>

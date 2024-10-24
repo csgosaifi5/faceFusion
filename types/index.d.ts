@@ -37,7 +37,7 @@ declare type UpdateUserParams = {
     is_locked?: boolean;
     unlock_time?: Date;
     expiry_time?: Date;
-    contractId?: string;
+    contract_id?: string;
   };
 };
 declare type Project = {
@@ -51,6 +51,42 @@ declare type Project = {
   createdAt: Date;
   updatedAt: Date;
 };
+// ====== TRANSACTIONS PARAMS
+interface ITRANSACTIONS extends Document {
+  _id: string;
+  razorpayOrderId: string;
+  amount?: number;
+  plan: string;
+  status: string;
+  tokens?: number;
+  user_id: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+  }
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+// ====== BLOGS PARAMS
+
+interface SingleBlog {
+  // Define the structure of each blog object according to your data
+  _id: string;
+  title: string;
+  description: string;
+  image?: string;
+  meta_description: string;
+  meta_keywords: string;
+  meta_title: string;
+  slug: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+interface AllBlogsProps {
+  blogs: SingleBlog[]; // An array of blogs
+  count: number; // A number representing the count
+}
+
 // ====== IMAGE PARAMS
 declare type AddImageParams = {
   image: {

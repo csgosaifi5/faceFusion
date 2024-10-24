@@ -8,14 +8,13 @@ const AUTH_PASSWORD = "secret"; // Replace with your password
 // username root
 // sshkeypath vastai
 
-
 // STEP 6
 export const POST = async (request: Request) => {
   try {
     const { user_id, managerId, sessionId } = await request.json();
-    const command: string = "logs";
+    const command: string = "apt-get install mesa-va-drivers -y && [ -d \"$HOME/miniconda\" ] || (curl -LO https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && bash Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/miniconda) && source ~/.bashrc && touch ~/.no_auto_tmux && export PATH=$HOME/miniconda/bin:$PATH && conda init --all && source ~/.bashrc && git clone https://github.com/nayan924/facefusion_public  && cd facefusion_public && conda create --name facefusion3 --file spec-file.txt && conda activate facefusion3 && python install.py --onnxruntime cuda && conda deactivate && conda activate facefusion3 && python facefusion.py run";
 
-    const runCommandResponse = await fetch(`${API_BASE_URL}/managers/${managerId}/sessions/${sessionId}/commands/`, {
+      const runCommandResponse = await fetch(`${API_BASE_URL}/managers/${managerId}/sessions/${sessionId}/commands/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -23,6 +22,8 @@ export const POST = async (request: Request) => {
       },
       body: JSON.stringify({ command }),
     });
+
+    console.log(runCommandResponse);
 
     if (!runCommandResponse.ok) {
       throw new Error(`Failed to run command '${command}': ${runCommandResponse.statusText}`);
@@ -37,7 +38,6 @@ export const POST = async (request: Request) => {
     return new NextResponse(JSON.stringify({ error: error }), { status: 500 });
   }
 };
-
 
 //STEP 7
 
@@ -58,7 +58,7 @@ export const PUT = async (request: Request) => {
 
     const fetchLogsData = await fetchLogsResponse.json();
 
-    return new NextResponse(JSON.stringify({ data: fetchLogsData, message :"Logs fetched" }), { status: 200 });
+    return new NextResponse(JSON.stringify({ data: fetchLogsData, message: "Logs fetched" }), { status: 200 });
   } catch (error) {
     console.error("Error in POST:", error);
     // Return an error response in case of failure

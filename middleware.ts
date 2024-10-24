@@ -1,8 +1,8 @@
-import { authMiddleware } from '@clerk/nextjs/server'
+import { authMiddleware } from '@clerk/nextjs/server';
 
 export default authMiddleware({
-  ignoredRoutes: ["/",'/api/webhooks(.*)'],
-})
+  ignoredRoutes: ["/", "/blogs", "/pricing", '/api/webhooks(.*)'], // Add /blogs to the ignoredRoutes array
+});
 
 export const config = {
   matcher: [
@@ -11,4 +11,4 @@ export const config = {
     // Always run for API routes
     '/(api|trpc)(.*)',
   ],
-}
+};

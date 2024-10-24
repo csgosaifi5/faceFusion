@@ -49,6 +49,11 @@ export const navLinks = [
     route: "/credits",
     icon: "/assets/icons/bag.svg",
   },
+  {
+    label: "Blogs List",
+    route: "/bloglist",
+    icon: "/assets/icons/blog.svg",
+  },
 ];
 
 export const plans = [
@@ -56,7 +61,7 @@ export const plans = [
     _id: 1,
     name: "Basic Package",
     icon: "/assets/icons/free-plan.svg",
-    price: 10,
+    price: 100,
     tokens: 100,
     inclusions: [
       {
