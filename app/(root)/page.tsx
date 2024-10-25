@@ -36,7 +36,7 @@ const HomePage = () => {
           <div className="md:w-1/2 mb-6 md:mb-0">
             <h2 className="text-3xl font-bold mb-4">Our Latest Project</h2>
             <p className="text-gray-400 mb-6">
-              Check out our most recent work - a stunning e-commerce platform that's redefining online shopping.
+              Check out our most recent work - a stunning e-commerce platform that&apos;s redefining online shopping.
             </p>
             <button className="bg-transparent hover:bg-purple-600 text-purple-400 font-semibold hover:text-white py-2 px-4 border border-purple-400 hover:border-transparent rounded transition-colors">
               View Project
@@ -61,7 +61,7 @@ const HomePage = () => {
               { name: "Sarah Lee", role: "Marketing Director, GrowFast", quote: "Incredible designs and top-notch development. A game-changer for us." },
             ].map((testimonial, index) => (
               <div key={index} className="bg-gray-100 p-6 rounded-lg">
-                <p className="italic mb-4">"{testimonial.quote}"</p>
+                <p className="italic mb-4">{testimonial.quote}</p>
                 <p className="font-semibold">{testimonial.name}</p>
                 <p className="text-sm text-gray-400">{testimonial.role}</p>
               </div>
